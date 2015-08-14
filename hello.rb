@@ -70,8 +70,16 @@ end
 
 DataMapper.finalize.auto_upgrade!
 
+
+
+
 # App interface
 get '/' do
+  # http://localhost:5000/auth/bigcommerce/callback
+  # http://localhost:5000/load
+  # http://localhost:5000/uninstall
+  # https://localhost:5000/remove-user
+
   @user = current_user
   @store = current_store
   return render_error('[home] Unauthorized!') unless @user && @store
@@ -79,6 +87,21 @@ get '/' do
   @bc_api_url = bc_api_url
   @client_id = bc_client_id
   @products = JSON.pretty_generate(@store.bc_api.products)
+
+  req = {
+      hawk_id: 'api.bc.com',
+      hawk_secret: 'xxx',
+      app_id: '170',
+      provider_name: 'PhilM'
+  }
+
+  begin
+    @create = @store.bc_api.create_shipping_providers(req)
+  rescue Exception => e
+    @create = e
+  end
+
+  @shipping = JSON.pretty_generate(@store.bc_api.shipping_providers)
 
   erb :index
 end
@@ -288,6 +311,6 @@ end
 # The scopes we are requesting (must match what we entered when
 # we registered the app)
 def scopes
-  'store_v2_products'
+  'store_v2_orders_read_only store_v2_products store_v2_content store_v2_marketing store_v2_information_read_only store_v2_shipping'
 end
 

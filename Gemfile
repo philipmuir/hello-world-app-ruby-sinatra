@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'bigcommerce'
+gem 'bigcommerce',  :path => '/Users/phil.muir/code/ruby/bigcommerce-api-ruby'
+
 gem 'omniauth-bigcommerce', git: 'https://github.com/bigcommerce/omniauth-bigcommerce.git'
 
 gem 'sinatra'
@@ -8,12 +9,5 @@ gem 'datamapper'
 gem 'thin'
 gem 'dotenv'
 
-group :production do
-  gem "pg"
-  gem "dm-postgres-adapter"
-end
-
-group :development do
-  gem "sqlite3"
-  gem "dm-sqlite-adapter"
-end
+gem "sqlite3"
+gem "dm-sqlite-adapter"
